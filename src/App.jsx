@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get('/questions.txt');
+      const { data } = await axios.get('https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md');
       const parsed = (new Markdown()).parse(data);
       const q = getQuestions(parsed);
       setQuestions(q);
@@ -48,6 +48,7 @@ function App() {
                 {
                   q.options.map((o, i) => (
                     <div
+                      key={o.content}
                       className={optionClassName(userAnswer, i, q.answerIndex)}
                       onClick={userAnswer === null ? () => setUserAnswer(i) : null}
                     >
@@ -60,7 +61,13 @@ function App() {
                 userAnswer !== null && (
                   <div>
                     <h4>Answer:</h4>
-                    <div className="description">{q.description.map(o => <ReactMarkdown source={o.content} />)}</div>
+                    <div className="description">
+                      {
+                        q.description.map(o => (
+                          <ReactMarkdown key={o.content} source={o.content} />
+                        ))
+                      }
+                    </div>
                   </div>
                 )
               }
