@@ -4,22 +4,15 @@ import Markdown from 'markdown-it';
 import ReactMarkdown from 'react-markdown';
 import Highlight from 'react-highlight'
 
-import { getQuestions } from './utils';
+import { getQuestions, optionClassName } from './utils';
 
 import 'highlight.js/styles/atom-one-dark.css';
 import './App.css';
-
-
 
 function App() {
   const [questions, setQuestions] = useState([]);
   const [userAnswer, setUserAnswer] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-
-  const onNextQuestion = useCallback(() => {
-    setCurrentQuestion((currentQuestion + 1) % questions.length);
-    setUserAnswer(null);
-  }, [currentQuestion, questions.length]);
 
   useEffect(() => {
     (async () => {
@@ -29,11 +22,15 @@ function App() {
       setQuestions(q);
       setCurrentQuestion(0);
     })();
-
   }, []);
 
-  console.log('questions', questions);
+  const onNextQuestion = useCallback(() => {
+    setCurrentQuestion((currentQuestion + 1) % questions.length);
+    setUserAnswer(null);
+  }, [currentQuestion, questions.length]);
+
   const q = questions[currentQuestion] || null;
+
   return (
     <div className="App">
       {
@@ -50,7 +47,10 @@ function App() {
               <div className="options">
                 {
                   q.options.map((o, i) => (
-                    <div onClick={() => setUserAnswer(i)} >
+                    <div
+                      className={optionClassName(userAnswer, i, q.answerIndex)}
+                      onClick={userAnswer === null ? () => setUserAnswer(i) : null}
+                    >
                       <ReactMarkdown source={o.content} />
                     </div>
                   ))

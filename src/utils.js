@@ -36,3 +36,17 @@ export const getQuestions = parsed => {
 
   return questions;
 };
+
+export const optionClassName = (answ, option, correct) => {
+  if (answ === null) {
+    return '';
+  }
+
+  if (option === correct) {
+    return 'correct';
+  }
+
+  if (option === answ) {
+    return 'wrong';
+  }
+};

@@ -50,9 +50,33 @@ body {
   background: #e9ebec;
 }
 
-.options code,
-.description code {
+.options .correct p {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.options .wrong p {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.options .correct code {
+  background: #a5d6b1;
+}
+
+.options .wrong code {
+  background: #e4b4b8;
+}
+
+.options code {
   background: #d6dade;
+  padding: 2px 3px 0;
+}
+
+.description code {
+  background: #eaeef3;
   padding: 2px 3px 0;
 }
 
