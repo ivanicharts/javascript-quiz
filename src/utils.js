@@ -20,12 +20,12 @@ export const getQuestions = parsed => {
     const answer = question[optionsEnd + 1];
 
     questions.push({
-      title,
-      code,
-      answer,
-      options: question.slice(0, optionsEnd),
+      title: title.content,
+      code: code ? code.content : null,
+      answer: answer.content,
+      options: question.slice(0, optionsEnd).map(e => e.content),
       answerIndex: answer.content.slice(-1).charCodeAt(0) - 65,
-      description: question.slice(optionsEnd + 2, descriptionEnd),
+      description: question.slice(optionsEnd + 2, descriptionEnd).map(e => e.tag === 'code' ? e : e.content),
     })
   }
 
@@ -34,6 +34,7 @@ export const getQuestions = parsed => {
     return i;
   }
 
+  // console.log('q', questions);
   return questions;
 };
 
