@@ -1,3 +1,8 @@
+export function stripHtml(htmlStr) {
+  const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
+  return doc.body.textContent || 'Parse error';
+}
+
 export const getQuestions = parsed => {
   const mdMarkup = parsed
     .filter(p => p.type === 'inline' || p.tag === 'code' || p.type === 'hr');
@@ -13,15 +18,19 @@ export const getQuestions = parsed => {
     const questionStart = ++i;
     const questionEnd = parseWhile(t => t.tag !== HR);
     const [title, ...question] = mdMarkup.slice(questionStart, questionEnd);
-    const code = question[0].tag === 'code' ? question.shift() : null;
+    const codeSnippets = [];
+
+    while (question[0] && question[0].tag === 'code') {
+      codeSnippets.push(question.shift().content);
+    }
+
     const optionsEnd = question.findIndex(t => t.content.includes('<details><summary><b>Answer'));
     const descriptionEnd = question.findIndex(t => t.content.includes('</p>'));
-
     const answer = question[optionsEnd + 1];
 
     questions.push({
-      title: title.content,
-      code: code ? code.content : null,
+      title: stripHtml(title.content),
+      code: codeSnippets,
       answer: answer.content,
       options: question.slice(0, optionsEnd).map(e => e.content),
       answerIndex: answer.content.slice(-1).charCodeAt(0) - 65,

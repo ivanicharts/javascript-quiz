@@ -95,11 +95,11 @@ function App() {
             </div>
             <div className="question-body">
               <h3 className="question-title">{q.title}</h3>
-              {q.code && (
+              {q.code.length && q.code.map(code => (
                 <div className="question-code-group">
-                  <Highlight className="javascript">{q.code}</Highlight>
+                  <Highlight className="javascript">{code}</Highlight>
                 </div>
-              )}
+              ))}
               <div className="options">
                 {
                   q.options.map((o, i) => (
