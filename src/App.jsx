@@ -15,6 +15,14 @@ const CURRENT = 'currentQuestion';
 const CORRECT_ANSWERS = 'answers/correct';
 const WRONG_ANSWERS = 'answers/wrong';
 
+// on finish show results
+// options: retake quizz retake with only wrong answers
+// go to home
+// on home show buttons to contiune last quizz or start new quizz
+
+// move fetch logic to use fetch hook
+// move useParsedQuestions to hook
+
 function App() {
   const [questions, setQuestions] = useState([]);
   const [userAnswer, setUserAnswer] = useState(null);
@@ -63,7 +71,6 @@ function App() {
     const nextQuestion = (currentQuestion + 1) % questions.length;
 
     if (i === q.answerIndex) {
-      onNextQuestion();
       setCorrectAnsererdQuestions(questions => {
         const newCorrectAnsweredQuestions = [...questions, q];
         localForage.setItem(CORRECT_ANSWERS, newCorrectAnsweredQuestions);
@@ -78,8 +85,9 @@ function App() {
         return newWrongAnsweredQuestions;
       });
     }
-  }, [currentQuestion, onNextQuestion, q, questions.length])
+  }, [currentQuestion, q, questions.length])
 
+  console.log('q', q);
 
   return (
     <div className="App">
@@ -134,13 +142,19 @@ function App() {
                   </div>
                 )
               }
-              {
-                userAnswer !== null && (
-                  <div className="btn-group">
-                    <button className="next-btn" onClick={onNextQuestion}>next</button>
-                  </div>
-                )
-              }
+              <div className="actions-group">
+                <div className="cancel-actions">
+                  <button className="cancel-btn" onClick={onNextQuestion}>cancel quizz</button>
+                </div>
+              
+                {
+                  userAnswer !== null && (
+                    <div className="btn-group">
+                      <button className="next-btn" onClick={onNextQuestion}>next</button>
+                    </div>
+                  )
+                }
+              </div>
             </div>
           </div>
         )
