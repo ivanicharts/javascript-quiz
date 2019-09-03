@@ -60,3 +60,5 @@ export const optionClassName = (answ, option, correct) => {
     return 'wrong';
   }
 };
+
+export const isDev = () => process.env === 'development';
