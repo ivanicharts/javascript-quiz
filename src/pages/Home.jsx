@@ -21,7 +21,7 @@ export function Home() {
               <Link to="/resource/1">
                 <Button>Continue</Button>
               </Link>
-              <Link to="/resource/1">
+              <Link to={{ pathname: '/resource/1', state: { new: true } }}>
                 <Button>Start new</Button>
               </Link>
             </LinkGroup>
