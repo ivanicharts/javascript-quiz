@@ -37,14 +37,17 @@ const WRONG_ANSWERS = 'answers/wrong';
 //   })
 // })
 
+// store in local storage as object
+// user can walk through all questions and cannot change choice
+
 export default function Resource() {
   const [questions, setQuestions] = useState([]);
   const [userAnswer, setUserAnswer] = useState(null);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [correctAnsererdQuestions, setCorrectAnsererdQuestions] = useState([]);
   const [wrongAnsererdQuestions, setWrongAnsererdQuestions] = useState([]);
 
-  const q = questions[currentQuestion] || null;
+  const q = questions[currentQuestionIndex] || null;
 
   useEffect(() => {
     (async () => {
@@ -59,7 +62,7 @@ export default function Resource() {
 
       if (questionsFromCash && questionsFromCash.length) {
         setQuestions(questionsFromCash);
-        setCurrentQuestion(currentQuestionFromCash || 0);
+        setCurrentQuestionIndex(currentQuestionFromCash || 0);
       }
 
       const { data } = await axios.get('https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md');
@@ -74,15 +77,22 @@ export default function Resource() {
   }, []);
 
   const onNextQuestion = useCallback(() => {
-    const nextQuestion = (currentQuestion + 1) % questions.length;
+    const nextQuestion = (currentQuestionIndex + 1) % questions.length;
 
-    setCurrentQuestion(nextQuestion);
+    setCurrentQuestionIndex(nextQuestion);
     setUserAnswer(null);
-  }, [currentQuestion, questions.length]);
+  }, [currentQuestionIndex, questions.length]);
+
+  const onPrevQuestion = useCallback(() => {
+    const prevQuestion = (currentQuestionIndex - 1) % questions.length;
+
+    setCurrentQuestionIndex(prevQuestion);
+    setUserAnswer(null);
+  }, [currentQuestionIndex, questions.length]);
 
   const onAnswerClick = useCallback((i) => {
     setUserAnswer(i);
-    const nextQuestion = (currentQuestion + 1) % questions.length;
+    const nextQuestion = (currentQuestionIndex + 1) % questions.length;
 
     if (i === q.answerIndex) {
       setCorrectAnsererdQuestions(questions => {
@@ -99,7 +109,7 @@ export default function Resource() {
         return newWrongAnsweredQuestions;
       });
     }
-  }, [currentQuestion, q, questions.length])
+  }, [currentQuestionIndex, q, questions.length])
 
   console.log('q', q);
 
@@ -113,7 +123,7 @@ export default function Resource() {
                 <span className="question-stats--correct">Correct: {correctAnsererdQuestions.length}</span>
                 <span>Wrong: {wrongAnsererdQuestions.length}</span>
               </div>
-              <div className="question-number">Question: {currentQuestion + 1} of {questions.length}</div>
+              <div className="question-number">Question: {currentQuestionIndex + 1} of {questions.length}</div>
             </div>
             <div className="question-body">
               <h3 className="question-title">{q.title}</h3>
@@ -165,13 +175,22 @@ export default function Resource() {
                   </Link>
                 </div>
               
-                {
-                  userAnswer !== null && (
-                    <div className="btn-group">
-                      <button className="next-btn" onClick={onNextQuestion}>next</button>
-                    </div>
-                  )
-                }
+                <div>
+                  {
+                    currentQuestionIndex > 0 && (
+                      <div className="btn-group">
+                        <button className="next-btn" onClick={onPrevQuestion}>prev</button>
+                      </div>
+                    )
+                  }
+                  {
+                    currentQuestionIndex < (questions.length - 1) && (
+                      <div className="btn-group">
+                        <button className="next-btn" onClick={onNextQuestion}>next</button>
+                      </div>
+                    )
+                  }
+                </div>
               </div>
             </div>
           </div>

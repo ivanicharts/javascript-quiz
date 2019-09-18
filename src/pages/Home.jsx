@@ -7,25 +7,22 @@ import { Page, Button } from '../components';
 export function Home() {
   return (
     <PageGroup>
-      <PageTitle>JavaScript Tests</PageTitle>
+      <PageTitle>List of (Advanced) JavaScript Questions</PageTitle>
       <Page>
         <CardGroup>
-          <Card to="/resource/1">
-            <Subtitle>JavaScript</Subtitle>
-            <Title>Advanced JS Questions</Title>
-            <Description>
-              A long list of (advanced) JavaScript questions, 
-              and their explanations sparkles Updated weekly!
-            </Description>
-            <LinkGroup>
-              <Link to="/resource/1">
-                <Button>Continue</Button>
-              </Link>
-              <Link to={{ pathname: '/resource/1', state: { new: true } }}>
-                <Button>Start new</Button>
-              </Link>
-            </LinkGroup>
-          </Card>
+          <Title>Advanced JS Questions</Title>
+          <Description>
+            A long list of (advanced) JavaScript questions, 
+            and their explanations sparkles Updated weekly!
+          </Description>
+          <LinkGroup>
+            <LinkItem to="/questions">
+              <Button>Continue</Button>
+            </LinkItem>
+            <Link to={{ pathname: '/questions', state: { new: true } }}>
+              <Button>Start new</Button>
+            </Link>
+          </LinkGroup>
         </CardGroup>
       </Page>
     </PageGroup>
@@ -46,17 +43,15 @@ const PageTitle = styled('h2')`
 const LinkGroup = styled('div')`
   margin-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+`;
+
+const LinkItem = styled(Link)`
+  margin: 0 20px;
 `;
 
 const CardGroup = styled('div')`
-  list-style-type: none;
   padding: 0;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(18rem,1fr));
-  grid-gap: 2.2rem;
 `;
 
 const Card = styled('div')`
