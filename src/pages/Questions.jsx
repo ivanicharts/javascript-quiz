@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import Highlight from 'react-highlight'
 import localForage from 'localforage';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { getQuestions, optionClassName } from '../utils';
 
@@ -167,30 +168,34 @@ export default function Resource() {
                 )
               }
               <div className="actions-group">
-                <div className="cancel-actions">
-                  <Link to="/">
-                    <button className="cancel-btn">
-                      cancel quizz
-                    </button>
-                  </Link>
-                </div>
+                <NavGroup>
+                  {/* <Link to="/"> */}
+                  <CancelBtnGroup>
+                    <CancelBtn>cancel</CancelBtn>
+                  </CancelBtnGroup>
+
+                  {/* </Link> */}
+                  <BtnGroup>
+                    <Button onClick={onPrevQuestion}>review questions</Button>
+                  </BtnGroup>
+                </NavGroup>
               
-                <div>
+                <NavGroup>
                   {
                     currentQuestionIndex > 0 && (
-                      <div className="btn-group">
-                        <button className="next-btn" onClick={onPrevQuestion}>prev</button>
-                      </div>
+                      <BtnGroup>
+                        <Button onClick={onPrevQuestion}>prev</Button>
+                      </BtnGroup>
                     )
                   }
                   {
                     currentQuestionIndex < (questions.length - 1) && (
-                      <div className="btn-group">
-                        <button className="next-btn" onClick={onNextQuestion}>next</button>
-                      </div>
+                      <BtnGroup>
+                        <Button onClick={onNextQuestion}>next</Button>
+                      </BtnGroup>
                     )
                   }
-                </div>
+                </NavGroup>
               </div>
             </div>
           </div>
@@ -199,3 +204,34 @@ export default function Resource() {
     </div>
   );
 }
+
+const NavGroup = styled('div')`
+  display: flex;
+`;
+
+const BtnGroup = styled('div')`
+  display: flex;
+  justify-content: flex-end;
+  margin: 25px 0 15px 20px;
+`;
+
+const CancelBtnGroup = styled(BtnGroup)`
+  margin-left: 0;
+`;
+
+// @TODO: move to shared
+const Button = styled.button`
+  border: 0;
+  outline: 0;
+  background: #E7ECF3;
+  color: #566588;
+  padding: 10px 30px;
+  border-radius: 3px;
+  font-size: 16px;
+  cursor: pointer;
+`;
+
+const CancelBtn = styled(Button)`
+  color: #fff;
+  background: #DC5454;
+`;
