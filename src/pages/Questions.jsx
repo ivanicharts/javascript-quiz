@@ -10,36 +10,12 @@ import styled from 'styled-components';
 import { getQuestions, optionClassName } from '../utils';
 
 import 'highlight.js/styles/atom-one-dark.css';
-// import '../App.scss';
 
 const QUESTIONS = 'questions';
 const CURRENT = 'currentQuestion';
 const CORRECT_ANSWERS = 'answers/correct';
 const WRONG_ANSWERS = 'answers/wrong';
 
-// on finish show results
-// options: retake quizz retake with only wrong answers
-// go to home
-// on home show buttons to contiune last quizz or start new quizz
-
-// move fetch logic to use fetch hook
-// move useParsedQuestions to hook
-// make all as resources
-// questions source as resource
-// with hook useResources
-
-// export default mount({
-//   '/': route({
-//     title: 'qz',
-//     view: <ResourcePage />
-//     // getView(request) {
-//     //   return <ResourcePage product={product} />
-//     // }
-//   })
-// })
-
-// store in local storage as object
-// user can walk through all questions and cannot change choice
 
 export default function Resource() {
   const [questions, setQuestions] = useState([]);

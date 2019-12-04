@@ -3,7 +3,7 @@ export function stripHtml(htmlStr) {
   return doc.body.textContent || 'Parse error';
 }
 
-export const getQuestions = parsed => {
+export const formatQuestionsFromMarkdown = parsed => {
   const mdMarkup = parsed
     .filter(p => p.type === 'inline' || p.tag === 'code' || p.type === 'hr');
 
@@ -29,6 +29,7 @@ export const getQuestions = parsed => {
     const answer = question[optionsEnd + 1];
 
     questions.push({
+      id: questions.length,
       title: stripHtml(title.content),
       code: codeSnippets,
       answer: answer.content,

@@ -1,5 +1,7 @@
 import React, { Suspense } from 'react';
+
 import Router from './Router';
+import { QuestionProvider } from 'modules/question/question.store';
 
 import './App.scss';
 
@@ -17,9 +19,11 @@ import './App.scss';
 
 function App() {
   return (
-    <main className="layout">
-      <Router />
-    </main>
+    <QuestionProvider>
+      <main className="layout">
+        <Router />
+      </main>
+    </QuestionProvider>
   );
 }
 
