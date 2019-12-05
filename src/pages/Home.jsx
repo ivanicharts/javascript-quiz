@@ -17,6 +17,8 @@ export function Home() {
           </Description>
           <LinkGroup>
             <LinkItem to="/questions">
+              {/* on continue go to questions review page and then select question to continue from gia */}
+              {/* use reselect to cash count of answered questions */}
               <Button>Continue</Button>
             </LinkItem>
             <Link to={{ pathname: '/questions', state: { new: true } }}>

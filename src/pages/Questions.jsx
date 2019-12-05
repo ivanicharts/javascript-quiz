@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import Markdown from 'markdown-it';
 import ReactMarkdown from 'react-markdown';
@@ -6,8 +6,10 @@ import Highlight from 'react-highlight'
 import localForage from 'localforage';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import isNil from 'lodash/isNil';
 
 import { getQuestions, optionClassName } from '../utils';
+import { useQuestion } from '../modules/question/question.module';
 
 import 'highlight.js/styles/atom-one-dark.css';
 
@@ -16,106 +18,77 @@ const CURRENT = 'currentQuestion';
 const CORRECT_ANSWERS = 'answers/correct';
 const WRONG_ANSWERS = 'answers/wrong';
 
-
 export default function Resource() {
-  const [questions, setQuestions] = useState([]);
-  const [userAnswer, setUserAnswer] = useState(null);
+  const [questionList, questionActions] = useQuestion();
+
+  // const [questions, setQuestions] = useState([]);
+  // const [correctAnsererdQuestions, setCorrectAnsererdQuestions] = useState([]);
+  // const [wrongAnsererdQuestions, setWrongAnsererdQuestions] = useState([]);
+
+  const [currentQuestionAnswerIndex, setCurrentQuestionAnswerIndex] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [correctAnsererdQuestions, setCorrectAnsererdQuestions] = useState([]);
-  const [wrongAnsererdQuestions, setWrongAnsererdQuestions] = useState([]);
 
-  const q = questions[currentQuestionIndex] || null;
-
-  useEffect(() => {
-    (async () => {
-      // get questions from store
-      const questionsFromCash = await localForage.getItem(QUESTIONS);
-      const currentQuestionFromCash = await localForage.getItem(CURRENT);
-      const correctAnswers = await localForage.getItem(CORRECT_ANSWERS);
-      const wrongAnswers = await localForage.getItem(WRONG_ANSWERS);
-
-      setCorrectAnsererdQuestions(correctAnswers || []);
-      setWrongAnsererdQuestions(wrongAnswers || [])
-
-      if (questionsFromCash && questionsFromCash.length) {
-        setQuestions(questionsFromCash);
-        setCurrentQuestionIndex(currentQuestionFromCash || 0);
-      }
-
-      const { data } = await axios.get('https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md');
-      const parsed = (new Markdown()).parse(data);
-      const formattedQuestions = getQuestions(parsed);
-
-      setQuestions(formattedQuestions);
-
-      // save questions
-      localForage.setItem(QUESTIONS, formattedQuestions);
-    })();
-  }, []);
+  const question = questionList[currentQuestionIndex] || null;
 
   const onNextQuestion = useCallback(() => {
-    const nextQuestion = (currentQuestionIndex + 1) % questions.length;
-
+    const nextQuestion = (currentQuestionIndex + 1) % questionList.length;
+  
     setCurrentQuestionIndex(nextQuestion);
-    setUserAnswer(null);
-  }, [currentQuestionIndex, questions.length]);
+    setCurrentQuestionAnswerIndex(null);
+  }, [currentQuestionIndex, questionList.length]);
 
   const onPrevQuestion = useCallback(() => {
-    const prevQuestion = (currentQuestionIndex - 1) % questions.length;
+    const prevQuestion = (currentQuestionIndex - 1) % questionList.length;
 
     setCurrentQuestionIndex(prevQuestion);
-    setUserAnswer(null);
-  }, [currentQuestionIndex, questions.length]);
+    setCurrentQuestionAnswerIndex(null);
+  }, [currentQuestionIndex, questionList.length]);
 
-  const onAnswerClick = useCallback((i) => {
-    setUserAnswer(i);
-    const nextQuestion = (currentQuestionIndex + 1) % questions.length;
+  const onAnswer = useCallback((answerIndex) => {
+    setCurrentQuestionAnswerIndex(answerIndex);
+    questionActions.setAnswer({ id: question.id, answerIndex });
+  }, [question, questionActions]);
 
-    if (i === q.answerIndex) {
-      setCorrectAnsererdQuestions(questions => {
-        const newCorrectAnsweredQuestions = [...questions, q];
-        localForage.setItem(CORRECT_ANSWERS, newCorrectAnsweredQuestions);
-        localForage.setItem(CURRENT, nextQuestion);
-        return newCorrectAnsweredQuestions;
-      });
-    } else {
-      setWrongAnsererdQuestions(questions => {
-        const newWrongAnsweredQuestions = [...questions, q];
-        localForage.setItem(WRONG_ANSWERS, newWrongAnsweredQuestions);
-        localForage.setItem(CURRENT, nextQuestion);
-        return newWrongAnsweredQuestions;
-      });
-    }
-  }, [currentQuestionIndex, q, questions.length])
+  const { correctAnsweredQuestionsCount, wrongAnsweredQuestionsCount } = useMemo(() => {
+    console.log('log only on set asnwer');
+    const [correct, wrong] = questionList.reduce((acc, q) => {
+      if (!isNil(q.userAnswerIndex)) {
+        acc[+!(q.answerIndex === q.userAnswerIndex)]++; // @TODO: refactor
+      }
+      return acc;
+    }, [0, 0]);
 
-  console.log('q', q);
+    return { correctAnsweredQuestionsCount: correct, wrongAnsweredQuestionsCount: wrong };
+  }, [questionList]);
+
+  console.log('q', question);
 
   return (
     <div className="page">
       {
-        q !== null && (
+        question !== null && (
           <div className="question-group">
             <div className="question-stats-group">
               <div className="question-stats">
-                <span className="question-stats--correct">Correct: {correctAnsererdQuestions.length}</span>
-                <span>Wrong: {wrongAnsererdQuestions.length}</span>
+                <span className="question-stats--correct">Correct: {correctAnsweredQuestionsCount}</span>
+                <span>Wrong: {wrongAnsweredQuestionsCount}</span>
               </div>
-              <div className="question-number">Question: {currentQuestionIndex + 1} of {questions.length}</div>
+              <div className="question-number">Question: {currentQuestionIndex + 1} of {questionList.length}</div>
             </div>
             <div className="question-body">
-              <h3 className="question-title">{q.title}</h3>
-              {q.code.length && q.code.map(code => (
+              <h3 className="question-title">{question.title}</h3>
+              {question.code.length && question.code.map(code => (
                 <div className="question-code-group">
                   <Highlight className="javascript">{code}</Highlight>
                 </div>
               ))}
               <div className="options">
                 {
-                  q.options.map((o, i) => (
+                  question.options.map((o, i) => (
                     <div
                       key={o}
-                      className={optionClassName(userAnswer, i, q.answerIndex)}
-                      onClick={userAnswer === null ? () => onAnswerClick(i) : null}
+                      className={optionClassName(currentQuestionAnswerIndex, i, question.answerIndex)}
+                      onClick={currentQuestionAnswerIndex === null ? () => onAnswer(i) : null}
                     >
                       <ReactMarkdown source={o} />
                     </div>
@@ -123,12 +96,12 @@ export default function Resource() {
                 }
               </div>
               {
-                userAnswer !== null && (
+                currentQuestionAnswerIndex !== null && (
                   <div className="question-answer--group">
-                    <h4>{q.answer}</h4>
+                    <h4>{question.answer}</h4>
                     <div className="description">
                       {
-                        q.description.map(o => typeof o === 'string' 
+                        question.description.map(o => typeof o === 'string' 
                           ? (
                             <ReactMarkdown key={o} source={o} escapeHtml={false} />
                           )
@@ -145,12 +118,9 @@ export default function Resource() {
               }
               <div className="actions-group">
                 <NavGroup>
-                  {/* <Link to="/"> */}
                   <CancelBtnGroup>
                     <CancelBtn>cancel</CancelBtn>
                   </CancelBtnGroup>
-
-                  {/* </Link> */}
                   <BtnGroup>
                     <Button onClick={onPrevQuestion}>review questions</Button>
                   </BtnGroup>
@@ -165,7 +135,7 @@ export default function Resource() {
                     )
                   }
                   {
-                    currentQuestionIndex < (questions.length - 1) && (
+                    currentQuestionIndex < (questionList.length - 1) && (
                       <BtnGroup>
                         <Button onClick={onNextQuestion}>next</Button>
                       </BtnGroup>

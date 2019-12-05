@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 
 import Router from './Router';
-import { QuestionProvider } from 'modules/question/question.store';
+import { QuestionProvider } from './modules/question/question.store';
 
 import './App.scss';
 

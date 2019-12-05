@@ -5,7 +5,9 @@
   "dependencies": {
     "axios": "^0.19.0",
     "highlight.js": "^9.15.9",
+    "immer": "^5.0.0",
     "localforage": "^1.7.3",
+    "lodash": "^4.17.15",
     "markdown-it": "^9.1.0",
     "markdown-json": "^1.4.0",
     "md-2-json": "^1.0.6",
@@ -16,6 +18,7 @@
     "react-markdown": "^4.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
+    "reselect": "^4.0.0",
     "styled-components": "^4.3.2"
   },
   "scripts": {

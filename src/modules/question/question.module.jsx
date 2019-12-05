@@ -15,22 +15,11 @@ const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/java
 const QUESTIONS_RAW = 'questions/raw';
 const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
 
-async function getQuestionsFromCash() {
-  const questionsInProgress = await localForage.getItem(QUESTIONS_IN_PROGRESS);
-
-  if (questionsInProgress) {
-    return questionsInProgress;
-  }
-
-  return await localForage.getItem(QUESTIONS_RAW);
-}
-
-function useQuestion() {
+export function useQuestion() {
   const { setQuestions } = useQuestionsActions();
 
   useEffect(() => {
     (async () => {
-      
       const questionsFromCash = await getQuestionsFromCash();
 
       const [isSetQuestionsFromCash, rawQuestions] = await Promise.all([
@@ -44,7 +33,6 @@ function useQuestion() {
         axios.get(QUESTIONS_SOURCE_URL).then(({ data }) => data),
       ]);
 
-
       const questionsMd = (new Markdown()).parse(rawQuestions);
       const formattedQuestions = formatQuestionsFromMarkdown(questionsMd);
       
@@ -56,5 +44,15 @@ function useQuestion() {
     })();
   }, [setQuestions]);
 
-  return [useQuestionState(), useQuestionDispatch()];
+  return [useQuestionState(), useQuestionsActions()];
+}
+
+async function getQuestionsFromCash() {
+  const questionsInProgress = await localForage.getItem(QUESTIONS_IN_PROGRESS);
+
+  if (questionsInProgress) {
+    return questionsInProgress;
+  }
+
+  return localForage.getItem(QUESTIONS_RAW);
 }

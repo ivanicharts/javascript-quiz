@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import React, { createContext, useReducer, useContext, useEffect, useMemo } from 'react';
 
 const StateContext = createContext();
 const DispatchContext = createContext();
@@ -7,11 +7,12 @@ const SET_QUESTIONS = 'set-questions';
 const SET_ANSWER = 'set-answer';
 
 function questionReducer(state, { type, payload }) {
+  console.log('QQQ', type, payload);
   switch (type) {
     case SET_QUESTIONS: 
       return payload;
     case SET_ANSWER:
-      return state.map(q => payload.id === q.id ? { ...q, answer: payload.anser } : q);
+      return state.map(q => payload.id === q.id ? { ...q, userAnswerIndex: payload.answerIndex } : q);
     default:
       throw new Error(`Unhandled action type: ${type}`);
   }
@@ -50,10 +51,10 @@ function useQuestion() {
 
 function useQuestionsActions() {
   const dispatch = useQuestionDispatch();
-  return {
+  return useMemo(() => ({
     setQuestions: payload => dispatch({ type: SET_QUESTIONS, payload }),
     setAnswer: payload => dispatch({ type: SET_ANSWER, payload }),
-  }
+  }), [dispatch]);
 }
 
 export {
