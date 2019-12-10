@@ -13,17 +13,8 @@ import { useQuestion } from '../modules/question/question.module';
 
 import 'highlight.js/styles/atom-one-dark.css';
 
-const QUESTIONS = 'questions';
-const CURRENT = 'currentQuestion';
-const CORRECT_ANSWERS = 'answers/correct';
-const WRONG_ANSWERS = 'answers/wrong';
-
 export default function Resource() {
   const [questionList, questionActions] = useQuestion();
-
-  // const [questions, setQuestions] = useState([]);
-  // const [correctAnsererdQuestions, setCorrectAnsererdQuestions] = useState([]);
-  // const [wrongAnsererdQuestions, setWrongAnsererdQuestions] = useState([]);
 
   const [currentQuestionAnswerIndex, setCurrentQuestionAnswerIndex] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -122,7 +113,9 @@ export default function Resource() {
                     <CancelBtn>cancel</CancelBtn>
                   </CancelBtnGroup>
                   <BtnGroup>
-                    <Button onClick={onPrevQuestion}>review questions</Button>
+                    <Link to="/progress">
+                      <Button>review questions</Button>
+                    </Link>
                   </BtnGroup>
                 </NavGroup>
               
