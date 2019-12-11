@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+import { useQuestionsActions } from '../modules/question/question.store';
 import { Page, Button } from '../components';
 
 export function Home() {
+  const { init } = useQuestionsActions();
   return (
     <PageGroup>
       <PageTitle>List of (Advanced) JavaScript Questions</PageTitle>
@@ -16,13 +18,13 @@ export function Home() {
             and their explanations sparkles Updated weekly!
           </Description>
           <LinkGroup>
-            <LinkItem to="/questions">
+            <LinkItem to="/progress">
               {/* on continue go to questions review page and then select question to continue from gia */}
               {/* use reselect to cash count of answered questions */}
               <Button>Continue</Button>
             </LinkItem>
             <Link to={{ pathname: '/questions', state: { new: true } }}>
-              <Button>Start new</Button>
+              <Button onClick={init}>Start new</Button>
             </Link>
           </LinkGroup>
         </CardGroup>
@@ -56,27 +58,26 @@ const CardGroup = styled('div')`
   padding: 0;
 `;
 
-const Card = styled('div')`
-  background: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px 0 rgba(0,0,0,.15);
-  position: relative;
-  transition: box-shadow .25s ease-in;
-  padding: 25px 15px;
-  text-decoration: none;
-  color: #000;
-  border-top: 5px solid #f1e05a;
+// const Card = styled('div')`
+//   background: #fff;
+//   border-radius: 2px;
+//   box-shadow: 0 2px 8px 0 rgba(0,0,0,.15);
+//   position: relative;
+//   transition: box-shadow .25s ease-in;
+//   padding: 25px 15px;
+//   text-decoration: none;
+//   color: #000;
+//   border-top: 5px solid #f1e05a;
 
-  &:hover {
-    box-shadow: -2px 8px 22px 0 rgba(0,0,0,.15);
-  }
-`;
+//   &:hover {
+//     box-shadow: -2px 8px 22px 0 rgba(0,0,0,.15);
+//   }
+// `;
 
-const Subtitle = styled('div')`
-  color: #5a5b5e;
-  font-size: 14px;
-  /* margin: 15px 0; */
-`;
+// const Subtitle = styled('div')`
+//   color: #5a5b5e;
+//   font-size: 14px;
+// `;
 
 const Title = styled('div')`
   font-weight: 700;
@@ -86,4 +87,4 @@ const Title = styled('div')`
 
 const Description = styled('div')`
   color: #5a5b5e;
-// `;
+ `;

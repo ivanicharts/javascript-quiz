@@ -1,18 +1,34 @@
-import React, { createContext, useReducer, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useReducer, useContext, useMemo, useEffect } from 'react';
+import localForage from 'localforage';
+import { createSelector } from 'reselect';
+import Markdown from 'markdown-it';
+import axios from 'axios';
+
+import { formatQuestionsFromMarkdown } from '../../utils';
 
 const StateContext = createContext();
 const DispatchContext = createContext();
 
 const SET_QUESTIONS = 'set-questions';
 const SET_ANSWER = 'set-answer';
+const CLEAR = 'clear';
+
+const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md';
+
+const QUESTIONS_ORIGINAL = 'questions/original';
+const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
+
 
 function questionReducer(state, { type, payload }) {
+  // @TODO: use immer here \^/
   console.log('QQQ', type, payload);
   switch (type) {
     case SET_QUESTIONS: 
       return payload;
     case SET_ANSWER:
       return state.map(q => payload.id === q.id ? { ...q, userAnswerIndex: payload.answerIndex } : q);
+    case CLEAR:
+      return [];
     default:
       throw new Error(`Unhandled action type: ${type}`);
   }
@@ -20,6 +36,42 @@ function questionReducer(state, { type, payload }) {
 
 function QuestionProvider({ children }) {
   const [state, dispatch] = useReducer(questionReducer, []);
+
+  useEffect(() => {
+    console.count('ONLY ONCE FETCH QUESTIONS');
+    (async () => {
+      const [
+        isSetQuestionsFromCash,
+        rawQuestions
+      ] = await Promise.all([
+        getQuestionsFromCash()
+          .then(questionsFromCash => {
+            console.log('isSetQuestionsFromCash', isSetQuestionsFromCash);
+            dispatch({ type: SET_QUESTIONS, payload: questionsFromCash });
+            return true;
+          })
+          .catch(e => (console.error(e), false)),
+
+        axios.get(QUESTIONS_SOURCE_URL)
+          .then(({ data }) => data)
+          .catch(e => (console.error(e), null)),
+      ]);
+
+      if (!rawQuestions) return;
+
+      const questionsMd = (new Markdown()).parse(rawQuestions);
+      const formattedQuestions = formatQuestionsFromMarkdown(questionsMd);
+      
+      if (!isSetQuestionsFromCash) {
+        dispatch({ type: SET_QUESTIONS, payload: formattedQuestions })
+      }
+      
+      localForage.setItem(QUESTIONS_ORIGINAL, formattedQuestions);
+    })();
+  }, []);
+
+  console.count('RENDER PROVIDER');
+
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
@@ -45,16 +97,38 @@ function useQuestionDispatch(params) {
   return context;
 }
 
-function useQuestion() {
-  return [useQuestionState(), useQuestionDispatch()];
-}
-
 function useQuestionsActions() {
   const dispatch = useQuestionDispatch();
   return useMemo(() => ({
     setQuestions: payload => dispatch({ type: SET_QUESTIONS, payload }),
     setAnswer: payload => dispatch({ type: SET_ANSWER, payload }),
+    clear: payload => dispatch({ type: CLEAR }),
+    init: async () => {
+      const payload = await localForage.getItem(QUESTIONS_ORIGINAL);
+      console.log('payload', payload);
+      dispatch({ type: SET_QUESTIONS, payload });
+    }
   }), [dispatch]);
+}
+
+function useQuestion() {
+  return [useQuestionState(), useQuestionsActions()];
+}
+
+async function getQuestionsFromCash(questionTypes = []) {
+  const questionsInProgress = await localForage.getItem(QUESTIONS_IN_PROGRESS);
+
+  if (questionsInProgress) {
+    return questionsInProgress;
+  }
+
+  const originalQuestions = await localForage.getItem(QUESTIONS_ORIGINAL);
+
+  if (originalQuestions) {
+    return originalQuestions;
+  }
+
+  throw new Error(`No questions found in Cash storage`);
 }
 
 export {
@@ -64,3 +138,4 @@ export {
   useQuestion,
   useQuestionsActions,
 };
+

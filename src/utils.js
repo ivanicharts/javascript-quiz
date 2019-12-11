@@ -63,3 +63,5 @@ export const optionClassName = (answ, option, correct) => {
 };
 
 export const isDev = () => process.env === 'development';
+
+export const allSettled = promises => Promise.all(promises.map(promise => promise.catch(e => e)));

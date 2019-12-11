@@ -7,19 +7,29 @@ import localForage from 'localforage';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import isNil from 'lodash/isNil';
+import { withRouter } from 'react-router-dom';
 
 import { getQuestions, optionClassName } from '../utils';
-import { useQuestion } from '../modules/question/question.module';
+import { useQuestion } from '../modules/question/question.store';
 
 import 'highlight.js/styles/atom-one-dark.css';
 
-export default function Resource() {
+function Resource({ history, match }) {
+  // const h = useHistory();
+  console.log('a', match);
   const [questionList, questionActions] = useQuestion();
 
   const [currentQuestionAnswerIndex, setCurrentQuestionAnswerIndex] = useState(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(match.params.id || 0);
 
   const question = questionList[currentQuestionIndex] || null;
+
+  console.log('questionList', questionList);
+
+  useEffect(() => {
+    console.count('SAVE TO STORAGE');
+    localForage.setItem('questions/in-progress', questionList);
+  }, [questionList])
 
   const onNextQuestion = useCallback(() => {
     const nextQuestion = (currentQuestionIndex + 1) % questionList.length;
@@ -39,6 +49,12 @@ export default function Resource() {
     setCurrentQuestionAnswerIndex(answerIndex);
     questionActions.setAnswer({ id: question.id, answerIndex });
   }, [question, questionActions]);
+
+  const onCancel = useCallback((answerIndex) => {
+    localForage.removeItem('questions/in-progress')
+    history.push('/');
+    questionActions.clear();
+  }, [history, questionActions]);
 
   const { correctAnsweredQuestionsCount, wrongAnsweredQuestionsCount } = useMemo(() => {
     console.log('log only on set asnwer');
@@ -110,7 +126,7 @@ export default function Resource() {
               <div className="actions-group">
                 <NavGroup>
                   <CancelBtnGroup>
-                    <CancelBtn>cancel</CancelBtn>
+                    <CancelBtn onClick={onCancel}>cancel</CancelBtn>
                   </CancelBtnGroup>
                   <BtnGroup>
                     <Link to="/progress">
@@ -174,3 +190,5 @@ const CancelBtn = styled(Button)`
   color: #fff;
   background: #DC5454;
 `;
+
+export default withRouter(Resource);

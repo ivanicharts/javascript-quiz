@@ -7,23 +7,21 @@ import { useQuestionsActions, useQuestionState, useQuestionDispatch } from './qu
 import { formatQuestionsFromMarkdown, optionClassName } from '../../utils';
 
 const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md';
-// const QUESTIONS = 'questions';
-// const CURRENT = 'currentQuestion';
-// const CORRECT_ANSWERS = 'answers/correct';
-// const WRONG_ANSWERS = 'answers/wrong';
 
 const QUESTIONS_RAW = 'questions/raw';
 const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
 
+// move this to store to provider component IMHO
 export function useQuestion() {
   const { setQuestions } = useQuestionsActions();
 
   useEffect(() => {
     (async () => {
-      const questionsFromCash = await getQuestionsFromCash();
+      // const questionsFromCash = await getQuestionsFromCash();
 
       const [isSetQuestionsFromCash, rawQuestions] = await Promise.all([
         getQuestionsFromCash().then(questionsFromCash => {
+          console.log('questionsFromCash', questionsFromCash);
           if (questionsFromCash) {
             setQuestions(questionsFromCash);
             return true;
@@ -32,6 +30,8 @@ export function useQuestion() {
         }),
         axios.get(QUESTIONS_SOURCE_URL).then(({ data }) => data),
       ]);
+
+      console.log('isSetQuestionsFromCash, rawQuestions', isSetQuestionsFromCash);
 
       const questionsMd = (new Markdown()).parse(rawQuestions);
       const formattedQuestions = formatQuestionsFromMarkdown(questionsMd);
