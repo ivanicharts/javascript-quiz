@@ -25,7 +25,7 @@ export function QuestionsProgress() {
           <Title>Quizz Progress</Title>
           <QuestionGroup>
             {questionList.map(question => (
-              <Link to={{ pathname: `/questions/${question.id || ''}`}}>
+              <Link to={{ pathname: `/questions/${question.id + 1}`}}>
                 <Question status={getStatus(question)} >{question.id + 1}</Question>
               </Link>
             ))}

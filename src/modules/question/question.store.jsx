@@ -46,7 +46,7 @@ function QuestionProvider({ children }) {
       ] = await Promise.all([
         getQuestionsFromCash()
           .then(questionsFromCash => {
-            console.log('isSetQuestionsFromCash', isSetQuestionsFromCash);
+            console.log('isSetQuestionsFromCash', questionsFromCash);
             dispatch({ type: SET_QUESTIONS, payload: questionsFromCash });
             return true;
           })

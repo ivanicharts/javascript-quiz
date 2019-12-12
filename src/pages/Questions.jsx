@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import axios from 'axios';
-import Markdown from 'markdown-it';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Highlight from 'react-highlight'
 import localForage from 'localforage';
@@ -9,22 +7,19 @@ import styled from 'styled-components';
 import isNil from 'lodash/isNil';
 import { withRouter } from 'react-router-dom';
 
-import { getQuestions, optionClassName } from '../utils';
+import { optionClassName } from '../utils';
 import { useQuestion } from '../modules/question/question.store';
 
 import 'highlight.js/styles/atom-one-dark.css';
 
 function Resource({ history, match }) {
-  // const h = useHistory();
-  console.log('a', match);
   const [questionList, questionActions] = useQuestion();
-
-  const [currentQuestionAnswerIndex, setCurrentQuestionAnswerIndex] = useState(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(match.params.id || 0);
-
+  const currentQuestionIndex = match.params.id ? parseInt(match.params.id - 1) : 0;
   const question = questionList[currentQuestionIndex] || null;
-
-  console.log('questionList', questionList);
+  
+  const userAnswerIndex = question && !isNil(question.userAnswerIndex)
+    ? question.userAnswerIndex
+    : null;
 
   useEffect(() => {
     console.count('SAVE TO STORAGE');
@@ -33,25 +28,19 @@ function Resource({ history, match }) {
 
   const onNextQuestion = useCallback(() => {
     const nextQuestion = (currentQuestionIndex + 1) % questionList.length;
-  
-    setCurrentQuestionIndex(nextQuestion);
-    setCurrentQuestionAnswerIndex(null);
-  }, [currentQuestionIndex, questionList.length]);
+    history.push(`/questions/${nextQuestion + 1}`);
+  }, [currentQuestionIndex, history, questionList.length]);
 
   const onPrevQuestion = useCallback(() => {
     const prevQuestion = (currentQuestionIndex - 1) % questionList.length;
-
-    setCurrentQuestionIndex(prevQuestion);
-    setCurrentQuestionAnswerIndex(null);
-  }, [currentQuestionIndex, questionList.length]);
+    history.push(`/questions/${prevQuestion + 1}`);
+  }, [currentQuestionIndex, history, questionList.length]);
 
   const onAnswer = useCallback((answerIndex) => {
-    setCurrentQuestionAnswerIndex(answerIndex);
     questionActions.setAnswer({ id: question.id, answerIndex });
   }, [question, questionActions]);
 
   const onCancel = useCallback((answerIndex) => {
-    localForage.removeItem('questions/in-progress')
     history.push('/');
     questionActions.clear();
   }, [history, questionActions]);
@@ -94,8 +83,8 @@ function Resource({ history, match }) {
                   question.options.map((o, i) => (
                     <div
                       key={o}
-                      className={optionClassName(currentQuestionAnswerIndex, i, question.answerIndex)}
-                      onClick={currentQuestionAnswerIndex === null ? () => onAnswer(i) : null}
+                      className={optionClassName(userAnswerIndex, i, question.answerIndex)}
+                      onClick={userAnswerIndex === null ? () => onAnswer(i) : null}
                     >
                       <ReactMarkdown source={o} />
                     </div>
@@ -103,10 +92,10 @@ function Resource({ history, match }) {
                 }
               </div>
               {
-                currentQuestionAnswerIndex !== null && (
+                userAnswerIndex !== null && (
                   <div className="question-answer--group">
                     <h4>{question.answer}</h4>
-                    <div className="description">
+                    <Description>
                       {
                         question.description.map(o => typeof o === 'string' 
                           ? (
@@ -119,7 +108,7 @@ function Resource({ history, match }) {
                           )
                         )
                       }
-                    </div>
+                    </Description>
                   </div>
                 )
               }
@@ -189,6 +178,15 @@ const Button = styled.button`
 const CancelBtn = styled(Button)`
   color: #fff;
   background: #DC5454;
+`;
+
+const Description = styled('div')`
+  line-height: 23px;
+
+  p code {
+    background: #eaeef3;
+    padding: 2px 3px 0;
+  }
 `;
 
 export default withRouter(Resource);

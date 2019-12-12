@@ -23,6 +23,7 @@ export function Home() {
               {/* use reselect to cash count of answered questions */}
               <Button>Continue</Button>
             </LinkItem>
+            {/* ON CLICK REMOVE IN PROGRESS AND REPLACE STATE WITH ORIGINAL Questions */}
             <Link to={{ pathname: '/questions', state: { new: true } }}>
               <Button onClick={init}>Start new</Button>
             </Link>
