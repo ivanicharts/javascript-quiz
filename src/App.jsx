@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import Router from './Router';
 import { QuestionProvider } from './modules/question/question.store';
 
 import './App.scss';
-
 
 // on finish show results
 // options: retake quizz retake with only wrong answers
@@ -20,9 +19,11 @@ import './App.scss';
 // Add loading state on fetching
 // replace localforage with abstract service
 
-function App() {
-  const [isFetching, setIsFetching] = useState(true);
+// modules as features
+// remove css, scss
+// relative imports
 
+function App() {
   return (
     <QuestionProvider>
       <main className="layout">

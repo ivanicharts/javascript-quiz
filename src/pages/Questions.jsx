@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import isNil from 'lodash/isNil';
 import { withRouter } from 'react-router-dom';
 
+import { CancelButton, Button } from '../components';
 import { optionClassName } from '../utils';
 import { useQuestion } from '../modules/question/question.store';
 
@@ -22,43 +23,36 @@ function Resource({ history, match }) {
     : null;
 
   useEffect(() => {
-    console.count('SAVE TO STORAGE');
+    console.count('>>>>>SAVE PROGRESS TO STORAGE<<<<<');
     localForage.setItem('questions/in-progress', questionList);
   }, [questionList])
 
   const onNextQuestion = useCallback(() => {
-    const nextQuestion = (currentQuestionIndex + 1) % questionList.length;
-    history.push(`/questions/${nextQuestion + 1}`);
+    const nextQuestionIndex = (currentQuestionIndex + 1) % questionList.length;
+    history.push(`/questions/${nextQuestionIndex + 1}`);
   }, [currentQuestionIndex, history, questionList.length]);
 
   const onPrevQuestion = useCallback(() => {
-    const prevQuestion = (currentQuestionIndex - 1) % questionList.length;
-    history.push(`/questions/${prevQuestion + 1}`);
+    const prevQuestionIndex = (currentQuestionIndex - 1) % questionList.length;
+    history.push(`/questions/${prevQuestionIndex + 1}`);
   }, [currentQuestionIndex, history, questionList.length]);
 
   const onAnswer = useCallback((answerIndex) => {
     questionActions.setAnswer({ id: question.id, answerIndex });
   }, [question, questionActions]);
 
-  const onCancel = useCallback((answerIndex) => {
-    history.push('/');
-    questionActions.clear();
-  }, [history, questionActions]);
-
-  const { correctAnsweredQuestionsCount, wrongAnsweredQuestionsCount } = useMemo(() => {
-    console.log('log only on set asnwer');
-    const [correct, wrong] = questionList.reduce((acc, q) => {
+  const { correctQuestionsCount, wrongQuestionsCount } = useMemo(() => {
+    const [correctCount, wrongCount] = questionList.reduce((acc, q) => {
       if (!isNil(q.userAnswerIndex)) {
-        acc[+!(q.answerIndex === q.userAnswerIndex)]++; // @TODO: refactor
+        acc[+!(q.answerIndex === q.userAnswerIndex)]++; // @TODO: refactor as it looks weird and unclear, but works :)
       }
       return acc;
     }, [0, 0]);
 
-    return { correctAnsweredQuestionsCount: correct, wrongAnsweredQuestionsCount: wrong };
+    return { correctQuestionsCount: correctCount, wrongQuestionsCount: wrongCount };
   }, [questionList]);
 
-  console.log('q', question);
-
+  // @TODO replace class name with styled ?
   return (
     <div className="page">
       {
@@ -66,15 +60,15 @@ function Resource({ history, match }) {
           <div className="question-group">
             <div className="question-stats-group">
               <div className="question-stats">
-                <span className="question-stats--correct">Correct: {correctAnsweredQuestionsCount}</span>
-                <span>Wrong: {wrongAnsweredQuestionsCount}</span>
+                <span className="question-stats--correct">Correct: {correctQuestionsCount}</span>
+                <span>Wrong: {wrongQuestionsCount}</span>
               </div>
               <div className="question-number">Question: {currentQuestionIndex + 1} of {questionList.length}</div>
             </div>
             <div className="question-body">
               <h3 className="question-title">{question.title}</h3>
-              {question.code.length && question.code.map(code => (
-                <div className="question-code-group">
+              {question.code.length && question.code.map((code, index) => (
+                <div key={index} className="question-code-group">
                   <Highlight className="javascript">{code}</Highlight>
                 </div>
               ))}
@@ -115,7 +109,9 @@ function Resource({ history, match }) {
               <div className="actions-group">
                 <NavGroup>
                   <CancelBtnGroup>
-                    <CancelBtn onClick={onCancel}>cancel</CancelBtn>
+                    <Link to="/">
+                      <CancelButton>cancel</CancelButton>
+                    </Link>
                   </CancelBtnGroup>
                   <BtnGroup>
                     <Link to="/progress">
@@ -125,20 +121,16 @@ function Resource({ history, match }) {
                 </NavGroup>
               
                 <NavGroup>
-                  {
-                    currentQuestionIndex > 0 && (
-                      <BtnGroup>
-                        <Button onClick={onPrevQuestion}>prev</Button>
-                      </BtnGroup>
-                    )
-                  }
-                  {
-                    currentQuestionIndex < (questionList.length - 1) && (
-                      <BtnGroup>
-                        <Button onClick={onNextQuestion}>next</Button>
-                      </BtnGroup>
-                    )
-                  }
+                  {currentQuestionIndex > 0 && (
+                    <BtnGroup>
+                      <Button onClick={onPrevQuestion}>prev</Button>
+                    </BtnGroup>
+                  )}
+                  {currentQuestionIndex < (questionList.length - 1) && (
+                    <BtnGroup>
+                      <Button onClick={onNextQuestion}>next</Button>
+                    </BtnGroup>
+                  )}
                 </NavGroup>
               </div>
             </div>
@@ -161,23 +153,6 @@ const BtnGroup = styled('div')`
 
 const CancelBtnGroup = styled(BtnGroup)`
   margin-left: 0;
-`;
-
-// @TODO: move to shared
-const Button = styled.button`
-  border: 0;
-  outline: 0;
-  background: #E7ECF3;
-  color: #566588;
-  padding: 10px 30px;
-  border-radius: 3px;
-  font-size: 16px;
-  cursor: pointer;
-`;
-
-const CancelBtn = styled(Button)`
-  color: #fff;
-  background: #DC5454;
 `;
 
 const Description = styled('div')`

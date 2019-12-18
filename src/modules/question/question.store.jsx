@@ -1,6 +1,5 @@
 import React, { createContext, useReducer, useContext, useMemo, useEffect } from 'react';
 import localForage from 'localforage';
-import { createSelector } from 'reselect';
 import Markdown from 'markdown-it';
 import axios from 'axios';
 
@@ -9,9 +8,9 @@ import { formatQuestionsFromMarkdown } from '../../utils';
 const StateContext = createContext();
 const DispatchContext = createContext();
 
-const SET_QUESTIONS = 'set-questions';
-const SET_ANSWER = 'set-answer';
-const CLEAR = 'clear';
+const SET_QUESTIONS = 'questions/set';
+const SET_ANSWER = 'questions/answer/set';
+const CLEAR = 'questions/clear';
 
 const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/javascript-questions/master/README.md';
 
@@ -21,7 +20,6 @@ const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
 
 function questionReducer(state, { type, payload }) {
   // @TODO: use immer here \^/
-  console.log('QQQ', type, payload);
   switch (type) {
     case SET_QUESTIONS: 
       return payload;
@@ -38,7 +36,7 @@ function QuestionProvider({ children }) {
   const [state, dispatch] = useReducer(questionReducer, []);
 
   useEffect(() => {
-    console.count('ONLY ONCE FETCH QUESTIONS');
+    console.count('<<<<<<<<<< ONLY ONCE FETCH QUESTIONS >>>>>>>>>>>>');
     (async () => {
       const [
         isSetQuestionsFromCash,
@@ -46,15 +44,20 @@ function QuestionProvider({ children }) {
       ] = await Promise.all([
         getQuestionsFromCash()
           .then(questionsFromCash => {
-            console.log('isSetQuestionsFromCash', questionsFromCash);
             dispatch({ type: SET_QUESTIONS, payload: questionsFromCash });
             return true;
           })
-          .catch(e => (console.error(e), false)),
+          .catch(e => {
+            console.error(e);
+            return false;
+          }),
 
         axios.get(QUESTIONS_SOURCE_URL)
           .then(({ data }) => data)
-          .catch(e => (console.error(e), null)),
+          .catch(e => {
+            console.error(e);
+            return false;
+          }),
       ]);
 
       if (!rawQuestions) return;
@@ -70,7 +73,7 @@ function QuestionProvider({ children }) {
     })();
   }, []);
 
-  console.count('RENDER PROVIDER');
+  console.count('<<<RENDER PROVIDER>>>');
 
   return (
     <StateContext.Provider value={state}>
@@ -105,7 +108,6 @@ function useQuestionsActions() {
     clear: payload => dispatch({ type: CLEAR }),
     init: async () => {
       const payload = await localForage.getItem(QUESTIONS_ORIGINAL);
-      console.log('payload', payload);
       dispatch({ type: SET_QUESTIONS, payload });
     }
   }), [dispatch]);
