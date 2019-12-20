@@ -17,7 +17,6 @@ export const Button = styled('button')`
   }
 `;
 
-
 export const CancelButton = styled(Button)`
   color: #fff;
   background: #DC5454;

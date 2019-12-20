@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import isNil from 'lodash/isNil';
 
-import { useQuestion } from '../modules/question/question.store';
-import { Page, Button, CancelButton } from '../components';
+import { useQuestion } from 'features/question/question.store';
+import { Page, Button, CancelButton } from 'components';
 
 const getStatus = ({ userAnswerIndex, answerIndex }) => {
   if (isNil(userAnswerIndex)) return null;
@@ -12,7 +12,7 @@ const getStatus = ({ userAnswerIndex, answerIndex }) => {
   return 'invalid';
 }
 
-export function QuestionsProgress() {
+export function Progress() {
   const [questionList] = useQuestion();
   // for dark theme https://dribbble.com/shots/7430090-Pagination , #293655
   return (

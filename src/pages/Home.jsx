@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import { useQuestionsActions } from '../modules/question/question.store';
+import { useQuestionsActions } from 'features/question/question.store';
 import { Page, Button } from '../components';
 
 export function Home() {

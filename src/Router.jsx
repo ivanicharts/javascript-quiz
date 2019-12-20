@@ -1,7 +1,7 @@
 import React from 'react';
 import { Home } from './pages';
 import Questions from './pages/Questions';
-import { QuestionsProgress } from './pages/QuestionsProgress';
+import { Progress } from './pages/Progress';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 export default function Router() {
@@ -10,7 +10,7 @@ export default function Router() {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/questions/:id?" component={Questions} />
-        <Route path="/progress" component={QuestionsProgress} />
+        <Route path="/progress" component={Progress} />
       </Switch>
     </BrowserRouter>
   )

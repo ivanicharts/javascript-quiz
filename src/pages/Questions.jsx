@@ -7,9 +7,9 @@ import styled from 'styled-components';
 import isNil from 'lodash/isNil';
 import { withRouter } from 'react-router-dom';
 
-import { CancelButton, Button } from '../components';
-import { optionClassName } from '../utils';
-import { useQuestion } from '../modules/question/question.store';
+import { CancelButton, Button } from 'components';
+import { optionClassName } from 'utils';
+import { useQuestion } from 'features/question/question.store';
 
 import 'highlight.js/styles/atom-one-dark.css';
 
@@ -67,7 +67,7 @@ function Resource({ history, match }) {
             </div>
             <div className="question-body">
               <h3 className="question-title">{question.title}</h3>
-              {question.code.length && question.code.map((code, index) => (
+              {!!question.code.length && question.code.map((code, index) => (
                 <div key={index} className="question-code-group">
                   <Highlight className="javascript">{code}</Highlight>
                 </div>
@@ -156,7 +156,6 @@ const NavGroup = styled('div')`
   flex-wrap: wrap;
 
   @media screen and (max-width: 616px) {
-    /* background: red; */
     justify-content: center;
     width: 100%;
   }
