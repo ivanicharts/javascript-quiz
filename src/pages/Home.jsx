@@ -24,9 +24,9 @@ export function Home() {
               <Button>Continue</Button>
             </LinkItem>
             {/* ON CLICK REMOVE IN PROGRESS AND REPLACE STATE WITH ORIGINAL Questions */}
-            <Link to={{ pathname: '/questions', state: { new: true } }}>
+            <LinkItem to={{ pathname: '/questions', state: { new: true } }}>
               <Button onClick={init}>Start new</Button>
-            </Link>
+            </LinkItem>
           </LinkGroup>
         </CardGroup>
       </Page>
@@ -49,36 +49,16 @@ const LinkGroup = styled('div')`
   margin-top: 20px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const LinkItem = styled(Link)`
-  margin: 0 20px;
+  margin: 7px 10px;
 `;
 
 const CardGroup = styled('div')`
   padding: 0;
 `;
-
-// const Card = styled('div')`
-//   background: #fff;
-//   border-radius: 2px;
-//   box-shadow: 0 2px 8px 0 rgba(0,0,0,.15);
-//   position: relative;
-//   transition: box-shadow .25s ease-in;
-//   padding: 25px 15px;
-//   text-decoration: none;
-//   color: #000;
-//   border-top: 5px solid #f1e05a;
-
-//   &:hover {
-//     box-shadow: -2px 8px 22px 0 rgba(0,0,0,.15);
-//   }
-// `;
-
-// const Subtitle = styled('div')`
-//   color: #5a5b5e;
-//   font-size: 14px;
-// `;
 
 const Title = styled('div')`
   font-weight: 700;

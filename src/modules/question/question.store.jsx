@@ -17,7 +17,6 @@ const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/java
 const QUESTIONS_ORIGINAL = 'questions/original';
 const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
 
-
 function questionReducer(state, { type, payload }) {
   // @TODO: use immer here \^/
   switch (type) {

@@ -106,7 +106,7 @@ function Resource({ history, match }) {
                   </div>
                 )
               }
-              <div className="actions-group">
+              <Actions>
                 <NavGroup>
                   <CancelBtnGroup>
                     <Link to="/">
@@ -115,7 +115,7 @@ function Resource({ history, match }) {
                   </CancelBtnGroup>
                   <BtnGroup>
                     <Link to="/progress">
-                      <Button>review questions</Button>
+                      <Button>progress</Button>
                     </Link>
                   </BtnGroup>
                 </NavGroup>
@@ -132,7 +132,7 @@ function Resource({ history, match }) {
                     </BtnGroup>
                   )}
                 </NavGroup>
-              </div>
+              </Actions>
             </div>
           </div>
         )
@@ -141,14 +141,35 @@ function Resource({ history, match }) {
   );
 }
 
+const Actions = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 616px) {
+    flex-direction: column-reverse;
+  }
+`;
+
 const NavGroup = styled('div')`
   display: flex;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 616px) {
+    /* background: red; */
+    justify-content: center;
+    width: 100%;
+  }
 `;
 
 const BtnGroup = styled('div')`
   display: flex;
   justify-content: flex-end;
   margin: 25px 0 15px 20px;
+  
+  @media screen and (max-width: 616px) {
+    margin: 5px;
+  }
 `;
 
 const CancelBtnGroup = styled(BtnGroup)`

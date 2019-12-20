@@ -18,7 +18,7 @@ export function QuestionsProgress() {
   return (
     <Page>
       <CardGroup>
-        <Title>Quizz Progress</Title>
+        <Title>Progress</Title>
         <QuestionGroup>
           {questionList.map(question => (
             <Link key={question.id} to={{ pathname: `/questions/${question.id + 1}`}}>
@@ -62,5 +62,5 @@ const CardGroup = styled('div')`
 const Title = styled('div')`
   font-weight: 700;
   font-size: 18px;
-  margin: 15px 0;
+  margin: 0 0 15px 0;
 `;
