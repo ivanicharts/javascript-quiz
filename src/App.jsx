@@ -4,10 +4,9 @@ import Router from './Router';
 import { QuestionProvider } from 'features/question/question.store';
 import { Main } from 'components';
 
-import './App.scss';
-
 // Add loading state on fetching
 // replace localforage with abstract service
+// Test if no internet and no data in local storage
 
 // modules as features
 // remove css, scss

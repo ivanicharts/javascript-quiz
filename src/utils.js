@@ -12,7 +12,13 @@ export const formatQuestionsFromMarkdown = parsed => {
   const questions = [];
 
   // Omit description and go to first question
-  parseWhile(t => t.tag !== HR);
+  let hrCount = 0;
+  parseWhile(t => {
+    if (t.tag !== HR) return true;
+    hrCount++;
+    if (hrCount >= 3) return false;
+    return true;
+  });
 
   while (i < mdMarkup.length - 1) {
     const questionStart = ++i;
@@ -30,7 +36,6 @@ export const formatQuestionsFromMarkdown = parsed => {
     const description = descriptionEnd > -1
       ? question.slice(optionsEnd + 2, descriptionEnd)
       : question.slice(optionsEnd + 2);
-
 
     questions.push({
       id: questions.length,

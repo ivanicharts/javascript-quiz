@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { useQuestionsActions } from 'features/question/question.store';
-import { Page, Button } from '../components';
+import { Page, Button, PageGroup } from '../components';
 
 export function Home() {
   const { init } = useQuestionsActions();
@@ -33,10 +33,6 @@ export function Home() {
     </PageGroup>
   );
 }
-
-const PageGroup = styled('div')`
-  width: 100%;
-`;
 
 const PageTitle = styled('h2')`
   text-align: center;

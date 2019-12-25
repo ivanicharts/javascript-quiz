@@ -7,3 +7,7 @@ export const Page = styled('section')`
   padding: 20px 15px;
   width: 100%;
 `;
+
+export const PageGroup = styled('div')`
+  width: 100%;
+`;

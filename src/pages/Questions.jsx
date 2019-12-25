@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import isNil from 'lodash/isNil';
 import { withRouter } from 'react-router-dom';
 
-import { CancelButton, Button } from 'components';
+import { CancelButton, Button, PageGroup } from 'components';
 import { optionClassName } from 'utils';
 import { useQuestion } from 'features/question/question.store';
 
@@ -54,25 +54,25 @@ function Resource({ history, match }) {
 
   // @TODO replace class name with styled ?
   return (
-    <div className="page">
+    <PageGroup> 
       {
         question !== null && (
-          <div className="question-group">
-            <div className="question-stats-group">
-              <div className="question-stats">
-                <span className="question-stats--correct">Correct: {correctQuestionsCount}</span>
+          <QuestionGroup>
+            <QuestionStatsGroup>
+              <QuestionStats>
+                <Correct>Correct: {correctQuestionsCount}</Correct>
                 <span>Wrong: {wrongQuestionsCount}</span>
-              </div>
-              <div className="question-number">Question: {currentQuestionIndex + 1} of {questionList.length}</div>
-            </div>
-            <div className="question-body">
-              <h3 className="question-title">{question.title}</h3>
+              </QuestionStats>
+              <QuestionNumber>Question: {currentQuestionIndex + 1} of {questionList.length}</QuestionNumber>
+            </QuestionStatsGroup>
+            <QuestionBody>
+              <QuestionTitle>{question.title}</QuestionTitle>
               {!!question.code.length && question.code.map((code, index) => (
-                <div key={index} className="question-code-group">
+                <QuestionAnswerGroup key={index}>
                   <Highlight className="javascript">{code}</Highlight>
-                </div>
+                </QuestionAnswerGroup>
               ))}
-              <div className="options">
+              <Options>
                 {
                   question.options.map((o, i) => (
                     <div
@@ -84,10 +84,10 @@ function Resource({ history, match }) {
                     </div>
                   ))
                 }
-              </div>
+              </Options>
               {
                 userAnswerIndex !== null && (
-                  <div className="question-answer--group">
+                  <QuestionAnswerGroup>
                     <h4>{question.answer}</h4>
                     <Description>
                       {
@@ -96,14 +96,14 @@ function Resource({ history, match }) {
                             <ReactMarkdown key={o} source={o} escapeHtml={false} />
                           )
                           : (
-                            <div key={o} className="question-code-group">
+                            <QuestionCodeGroup key={o}>
                               <Highlight className="javascript">{o.content}</Highlight>
-                            </div>
+                            </QuestionCodeGroup>
                           )
                         )
                       }
                     </Description>
-                  </div>
+                  </QuestionAnswerGroup>
                 )
               }
               <Actions>
@@ -133,11 +133,11 @@ function Resource({ history, match }) {
                   )}
                 </NavGroup>
               </Actions>
-            </div>
-          </div>
+            </QuestionBody>
+          </QuestionGroup>
         )
       }
-    </div>
+    </PageGroup>
   );
 }
 
@@ -182,6 +182,98 @@ const Description = styled('div')`
     background: #eaeef3;
     padding: 2px 3px 0;
   }
+`;
+
+const QuestionGroup = styled('div')`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto 50px;
+`;
+
+const QuestionStatsGroup = styled('div')`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const QuestionStats = styled('div')`
+  opacity: .3;
+  padding: 7px 0;
+`;
+
+const Correct = styled('span')`
+  margin-right: 10px;
+`;
+
+const QuestionNumber = styled('div')`
+  opacity: .3;
+  padding: 7px 0;
+  text-align: right;
+`;
+
+const QuestionBody = styled('div')`
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
+  padding: 2px 15px;
+`;
+
+const QuestionTitle = styled('h3')`
+  margin: 15px 0;
+  line-height: 1;
+`;
+
+const QuestionAnswerGroup = styled('div')`
+  border-top: 1px solid rgba(0,0,0, .1);
+  margin-top: 27px;  
+`;
+
+const QuestionCodeGroup = styled('div')`
+  margin: 0 0 15px;
+
+  pre {
+    margin: 0;
+  }  
+`;
+
+const Options = styled('div')`
+  p {
+    cursor: pointer;
+    background: #f6f8fa;
+    padding: 13px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0, .1);
+    margin: 0 0 15px;
+    
+    &:hover {
+      background: #e9ebec;
+    }
+  }
+
+  .correct p {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+
+  .wrong p {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+
+  .correct code {
+    background: #a5d6b1;
+  }
+
+  .wrong code {
+    background: #e4b4b8;
+  }
+
+  code {
+    background: #d6dade;
+    padding: 2px 3px 0;
+  }
+  
 `;
 
 export default withRouter(Resource);
