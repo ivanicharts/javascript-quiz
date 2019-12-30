@@ -6,6 +6,7 @@ import { useQuestionsActions } from 'features/question/question.store';
 import { Page, Button, PageGroup } from 'components';
 
 export function Home() {
+  console.log('::Homme')
   const { init } = useQuestionsActions();
   return (
     <PageGroup>

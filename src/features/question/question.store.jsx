@@ -67,6 +67,8 @@ function QuestionProvider({ children }) {
       const questionsMd = (new Markdown()).parse(rawQuestions);
       const formattedQuestions = formatQuestionsFromMarkdown(questionsMd);
       
+      console.log('::store')
+
       if (!isSetQuestionsFromCash) {
         dispatch({ type: SET_QUESTIONS, payload: formattedQuestions })
       }
