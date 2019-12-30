@@ -39,7 +39,6 @@ function QuestionProvider({ children }) {
   const [state, dispatch] = useReducer(questionReducer, []);
 
   useEffect(() => {
-    console.count('<<<<<<<<<< ONLY ONCE FETCH QUESTIONS >>>>>>>>>>>>');
     (async () => {
       const [
         isSetQuestionsFromCash,
@@ -75,8 +74,6 @@ function QuestionProvider({ children }) {
       localForage.setItem(QUESTIONS_ORIGINAL, formattedQuestions);
     })();
   }, []);
-
-  console.count('<<<RENDER PROVIDER>>>');
 
   return (
     <StateContext.Provider value={state}>

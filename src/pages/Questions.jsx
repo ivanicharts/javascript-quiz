@@ -23,7 +23,6 @@ function Resource({ history, match }) {
     : null;
 
   useEffect(() => {
-    console.count('>>>>>SAVE PROGRESS TO STORAGE<<<<<');
     localForage.setItem('questions/in-progress', questionList);
   }, [questionList])
 
@@ -53,8 +52,6 @@ function Resource({ history, match }) {
 
     return { correctQuestionsCount: correctCount, wrongQuestionsCount: wrongCount };
   }, [questionList]);
-
-  console.count('RENDER Q');
 
   return (
     <PageGroup> 
