@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext, useMemo, useEffect } from
 import localForage from 'localforage';
 import Markdown from 'markdown-it';
 import axios from 'axios';
+import produce from 'immer';
 
 import { formatQuestionsFromMarkdown } from '../../utils';
 
@@ -17,19 +18,22 @@ const QUESTIONS_SOURCE_URL = 'https://raw.githubusercontent.com/lydiahallie/java
 const QUESTIONS_ORIGINAL = 'questions/original';
 const QUESTIONS_IN_PROGRESS = 'questions/in-progress';
 
-function questionReducer(state, { type, payload }) {
-  // @TODO: use immer here \^/
+const questionReducer = produce(function questionReducer(state, { type, payload }) {
   switch (type) {
-    case SET_QUESTIONS: 
-      return payload;
+    case SET_QUESTIONS: return payload;
+    case CLEAR: return [];
+
     case SET_ANSWER:
-      return state.map(q => payload.id === q.id ? { ...q, userAnswerIndex: payload.answerIndex } : q);
-    case CLEAR:
-      return [];
+      const question = state.find(q => q.id === payload.id);
+      if (question) {
+        question.userAnswerIndex = payload.answerIndex;
+      }
+      return state;
+
     default:
       throw new Error(`Unhandled action type: ${type}`);
   }
-}
+});
 
 function QuestionProvider({ children }) {
   const [state, dispatch] = useReducer(questionReducer, []);

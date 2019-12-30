@@ -8,7 +8,7 @@ import isNil from 'lodash/isNil';
 import { withRouter } from 'react-router-dom';
 
 import { CancelButton, Button, PageGroup } from 'components';
-import { optionClassName } from 'utils';
+import { optionClassName, scrollToTop } from 'utils';
 import { useQuestion } from 'features/question/question.store';
 
 import 'highlight.js/styles/atom-one-dark.css';
@@ -30,11 +30,13 @@ function Resource({ history, match }) {
   const onNextQuestion = useCallback(() => {
     const nextQuestionIndex = (currentQuestionIndex + 1) % questionList.length;
     history.push(`/questions/${nextQuestionIndex + 1}`);
+    scrollToTop(); 
   }, [currentQuestionIndex, history, questionList.length]);
 
   const onPrevQuestion = useCallback(() => {
     const prevQuestionIndex = (currentQuestionIndex - 1) % questionList.length;
     history.push(`/questions/${prevQuestionIndex + 1}`);
+    scrollToTop(); 
   }, [currentQuestionIndex, history, questionList.length]);
 
   const onAnswer = useCallback((answerIndex) => {
@@ -52,7 +54,8 @@ function Resource({ history, match }) {
     return { correctQuestionsCount: correctCount, wrongQuestionsCount: wrongCount };
   }, [questionList]);
 
-  // @TODO replace class name with styled ?
+  console.count('RENDER Q');
+
   return (
     <PageGroup> 
       {
@@ -224,7 +227,7 @@ const QuestionTitle = styled('h3')`
 
 const QuestionAnswerGroup = styled('div')`
   border-top: 1px solid rgba(0,0,0, .1);
-  margin-top: 27px;  
+  /* margin-top: 27px;   */
 `;
 
 const QuestionCodeGroup = styled('div')`

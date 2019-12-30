@@ -3,28 +3,35 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { useQuestionsActions } from 'features/question/question.store';
-import { Page, Button, PageGroup } from '../components';
+import { Page, Button, PageGroup } from 'components';
 
 export function Home() {
   const { init } = useQuestionsActions();
   return (
     <PageGroup>
-      <PageTitle>List of (Advanced) JavaScript Questions</PageTitle>
+      <PageTitle>Interactive list of JavaScript Questions</PageTitle>
       <Page>
         <CardGroup>
-          <Title>Advanced JS Questions</Title>
+          <Title>What is this ?</Title>
           <Description>
-            A long list of (advanced) JavaScript questions, 
-            and their explanations sparkles Updated weekly!
+            <p>
+              This is the interactive representation of 
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://github.com/lydiahallie/javascript-questions"
+              >
+              javascript-questions
+              </a> 
+              repository. All questions are parsed from there.
+            </p>
+            <p>The source code of this app can be found here.</p>
           </Description>
           <LinkGroup>
             <LinkItem to="/progress">
-              {/* on continue go to questions review page and then select question to continue from gia */}
-              {/* use reselect to cash count of answered questions */}
               <Button>Continue</Button>
             </LinkItem>
-            {/* ON CLICK REMOVE IN PROGRESS AND REPLACE STATE WITH ORIGINAL Questions */}
-            <LinkItem to={{ pathname: '/questions', state: { new: true } }}>
+            <LinkItem to="/questions">
               <Button onClick={init}>Start new</Button>
             </LinkItem>
           </LinkGroup>

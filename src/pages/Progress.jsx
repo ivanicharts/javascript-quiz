@@ -5,6 +5,7 @@ import isNil from 'lodash/isNil';
 
 import { useQuestion } from 'features/question/question.store';
 import { Page, Button, CancelButton } from 'components';
+import { scrollToTop } from 'utils';
 
 const getStatus = ({ userAnswerIndex, answerIndex }) => {
   if (isNil(userAnswerIndex)) return null;
@@ -14,6 +15,7 @@ const getStatus = ({ userAnswerIndex, answerIndex }) => {
 
 export function Progress() {
   const [questionList] = useQuestion();
+  React.useEffect(() => void scrollToTop(), []);
   // for dark theme https://dribbble.com/shots/7430090-Pagination , #293655
   return (
     <Page>
@@ -50,7 +52,6 @@ const Question = styled(Button)`
   width: 40px;
   height: 40px;
   padding: 0;
-  /* @TODO refactor with styledMap */
   background: ${({ status }) => status === 'valid' ? '#65d68a' : status === 'invalid' ? '#dc5454' : '#E7ECF3'};
   color: ${({ status }) => status ? '#fff' : '#566588'};
 `;
