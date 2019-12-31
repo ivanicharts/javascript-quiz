@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/javascript-quizz/static/css/main.c5e1bf56.chunk.css",
-    "main.js": "/javascript-quizz/static/js/main.75e8d411.chunk.js",
-    "main.js.map": "/javascript-quizz/static/js/main.75e8d411.chunk.js.map",
-    "runtime~main.js": "/javascript-quizz/static/js/runtime~main.6aa64b80.js",
-    "runtime~main.js.map": "/javascript-quizz/static/js/runtime~main.6aa64b80.js.map",
-    "static/css/2.72d72b5e.chunk.css": "/javascript-quizz/static/css/2.72d72b5e.chunk.css",
-    "static/js/2.bd8b8f1a.chunk.js": "/javascript-quizz/static/js/2.bd8b8f1a.chunk.js",
-    "static/js/2.bd8b8f1a.chunk.js.map": "/javascript-quizz/static/js/2.bd8b8f1a.chunk.js.map",
-    "index.html": "/javascript-quizz/index.html",
-    "precache-manifest.61a34cdb0eba4598cf353b0befe4f93e.js": "/javascript-quizz/precache-manifest.61a34cdb0eba4598cf353b0befe4f93e.js",
-    "service-worker.js": "/javascript-quizz/service-worker.js",
-    "static/css/2.72d72b5e.chunk.css.map": "/javascript-quizz/static/css/2.72d72b5e.chunk.css.map",
-    "static/css/main.c5e1bf56.chunk.css.map": "/javascript-quizz/static/css/main.c5e1bf56.chunk.css.map"
+    "main.css": "/javascript-quiz/static/css/main.c5e1bf56.chunk.css",
+    "main.js": "/javascript-quiz/static/js/main.e199323c.chunk.js",
+    "main.js.map": "/javascript-quiz/static/js/main.e199323c.chunk.js.map",
+    "runtime~main.js": "/javascript-quiz/static/js/runtime~main.b165cd95.js",
+    "runtime~main.js.map": "/javascript-quiz/static/js/runtime~main.b165cd95.js.map",
+    "static/css/2.72d72b5e.chunk.css": "/javascript-quiz/static/css/2.72d72b5e.chunk.css",
+    "static/js/2.f2ed6cb4.chunk.js": "/javascript-quiz/static/js/2.f2ed6cb4.chunk.js",
+    "static/js/2.f2ed6cb4.chunk.js.map": "/javascript-quiz/static/js/2.f2ed6cb4.chunk.js.map",
+    "index.html": "/javascript-quiz/index.html",
+    "precache-manifest.4e9d91c71595e00cedf9501743022d1c.js": "/javascript-quiz/precache-manifest.4e9d91c71595e00cedf9501743022d1c.js",
+    "service-worker.js": "/javascript-quiz/service-worker.js",
+    "static/css/2.72d72b5e.chunk.css.map": "/javascript-quiz/static/css/2.72d72b5e.chunk.css.map",
+    "static/css/main.c5e1bf56.chunk.css.map": "/javascript-quiz/static/css/main.c5e1bf56.chunk.css.map"
   }
 }
