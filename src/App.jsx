@@ -6,10 +6,9 @@ import { Main } from 'components';
 
 // Add loading state on fetching
 // replace localforage with abstract service
-// Test if no internet and no data in local storage
+// Test case if no internet and no data in local storage
 
 function App() {
-  console.log('App::')
   return (
     <QuestionProvider>
       <Main>

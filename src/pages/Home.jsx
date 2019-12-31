@@ -6,7 +6,6 @@ import { useQuestionsActions } from 'features/question/question.store';
 import { Page, Button, PageGroup } from 'components';
 
 export function Home() {
-  console.log('::Homme')
   const { init } = useQuestionsActions();
   return (
     <PageGroup>
@@ -16,7 +15,7 @@ export function Home() {
           <Title>What is this ?</Title>
           <Description>
             <p>
-              This is the interactive representation of 
+              This is the interactive representation of &nbsp;
               <a
                 rel="noopener noreferrer"
                 target="_blank"
@@ -24,9 +23,16 @@ export function Home() {
               >
               javascript-questions
               </a> 
-              repository. All questions are parsed from there.
+              &nbsp; repository. All questions are parsed from there.
             </p>
-            <p>The source code of this app can be found here.</p>
+            <p>The source code of this app can be found &nbsp;
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://github.com/ivanicharts/javascript-quizz">
+                here
+              </a>
+            .</p>
           </Description>
           <LinkGroup>
             <LinkItem to="/progress">

@@ -2,16 +2,16 @@ import React from 'react';
 import { Home } from './pages';
 import Questions from './pages/Questions';
 import { Progress } from './pages/Progress';
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route } from "react-router-dom";
 
 export default function Router() {
   return (
-    <BrowserRouter>
+    <HashRouter basename="/">
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/questions/:id?" component={Questions} />
         <Route path="/progress" component={Progress} />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
