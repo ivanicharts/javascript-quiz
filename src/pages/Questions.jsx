@@ -1,11 +1,10 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import Highlight from 'react-highlight'
+import Highlight from 'react-highlight';
 import localForage from 'localforage';
-import { Link } from 'react-router-dom';
+import { Link , withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import isNil from 'lodash/isNil';
-import { withRouter } from 'react-router-dom';
 
 import { CancelButton, Button, PageGroup } from 'components';
 import { optionClassName, scrollToTop } from 'utils';
@@ -24,7 +23,7 @@ function Resource({ history, match }) {
 
   useEffect(() => {
     localForage.setItem('questions/in-progress', questionList);
-  }, [questionList])
+  }, [questionList]);
 
   const onNextQuestion = useCallback(() => {
     const nextQuestionIndex = (currentQuestionIndex + 1) % questionList.length;

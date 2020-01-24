@@ -1,12 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import annyang from 'annyang';
+// ^ move to service with fallback
 
 import { useQuestionsActions } from 'features/question/question.store';
 import { Page, Button, PageGroup } from 'components';
 
-export function Home() {
+export const Home = withRouter(function Home({ history }) {
   const { init } = useQuestionsActions();
+
+  useEffect(() => {
+    annyang.setLanguage('ru');
+    annyang.addCallback('result', (...args) => {
+      console.log('result', args);
+    });
+    annyang.addCallback('resultMatch', (...args) => {
+      console.log('resultMatch', args);
+    });
+    annyang.addCallback('resultNoMatch', (...args) => {
+      console.log('resultNoMatch', args);
+    });
+    annyang.addCallback('error', (...args) => {
+      console.log('err', args);
+    });
+    annyang.addCallback('errorNetwork', (...args) => {
+      console.log('errorNetwork', args);
+    });
+    annyang.addCallback('errorPermissionBlocked', (...args) => {
+      console.log('errorPermissionBlocked', args);
+    });
+    annyang.addCallback('errorPermissionDenied', (...args) => {
+      console.log('errorPermissionDenied', args);
+    });
+    annyang.addCallback('start', (...args) => {
+      console.log('start', args);
+    });
+    annyang.addCallback('end', (...args) => {
+      console.log('end', args);
+    });
+    annyang.addCallback('soundstart', (...args) => {
+      console.log('soundstart', args);
+    });
+    annyang.addCommands({
+      // 'continue': () => history.push('/progress'),
+      'continue': () => console.log('asd continue'),
+    });
+  }, []);
+
   return (
     <PageGroup>
       <PageTitle>Interactive list of JavaScript Questions</PageTitle>
@@ -46,7 +87,7 @@ export function Home() {
       </Page>
     </PageGroup>
   );
-}
+});
 
 const PageTitle = styled('h2')`
   text-align: center;
