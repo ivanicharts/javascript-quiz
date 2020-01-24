@@ -5,6 +5,7 @@ This is the interactive representation of [javascript-questions](https://github.
 ### TODO
 
 - [x] Release first basic version of app
+- [ ] Add prettier
 - [ ] Add voice commands
 - [ ] Add dark theme
 - [ ] Add TypeScript
